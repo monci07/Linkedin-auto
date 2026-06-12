@@ -4,6 +4,7 @@ import threading
 last_commit = None
 
 def threding_git(git, stop_event):
+    global last_commit
     while not stop_event.is_set():
         new_commit, last_commit = git.get_last_commit()
         if not new_commit: stop_event.set()
@@ -16,8 +17,6 @@ if __name__ == '__main__':
     thread = threading.Thread(target=threding_git, args=(git,stop_event))
     thread.start()
     thread.join()
-    
-    while last_commit is None: pass
     
     print(f"SHA:     {last_commit.sha[:7]}")
     print(f"Autor:   {last_commit.commit.author.name}")
