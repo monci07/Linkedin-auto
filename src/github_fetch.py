@@ -19,8 +19,11 @@ class github_fetch:
         last_commit = commits[0]
         if last_commit.sha[:7] != self.last_sha:
             print('There is a new commit')
+            self.last_sha = last_commit.sha[:7]
+            return False, last_commit
         else:
             print("There hasn't been a new commit")
+            return True, None
 
         # for commit in commits[:10]:
         #     print(f"SHA:     {commit.sha[:7]}")
