@@ -25,12 +25,12 @@ Avoid generic phrases like 'excited to share', 'thrilled to announce', or 'on my
 Integrate the project link naturally. No hashtag spam — max 2 relevant ones."
     while True:
         stop_event = threading.Event()
-    
+        
         thread = threading.Thread(target=threding_git, args=(git,stop_event))
         thread.start()
         thread.join()
         
         
-        response = claude.call(message.format(git_message=last_commit.commit.message.text, project = project))
+        response = claude.call(message.format(git_message=last_commit.commit.message.split('\n\n')[1], project = project))
         print(response)
 
