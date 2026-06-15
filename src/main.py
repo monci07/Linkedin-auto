@@ -36,7 +36,7 @@ Avoid using emojis, unless it marks the end of the project. \
 Integrate the project link naturally. No hashtag spam — max 2 relevant ones. \
 Don't give to much information about the project, keep it vague. \
 Return only the post text, no introduction, no '---', no extra commentary."
-
+ 
     query = """
 mutation {
   createPost(input: {
