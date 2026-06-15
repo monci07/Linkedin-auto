@@ -32,6 +32,7 @@ Project link: https://github.com/{project} \
 Write a short LinkedIn post (3-5 lines max) about this update. \
 Tone: genuine, mildly enthusiastic, professional but human. \
 Avoid generic phrases like 'excited to share', 'thrilled to announce', or 'on my journey'. \
+Avoid using emojis, unless it marks the end of the project. \
 Integrate the project link naturally. No hashtag spam — max 2 relevant ones. \
 Don't give to much information about the project, keep it vague. \
 Return only the post text, no introduction, no '---', no extra commentary."
@@ -65,7 +66,7 @@ mutation {
         thread.start()
         thread.join()
         
-        response_claude = claude.call(message.format(git_message=last_commit.commit.message.split('\n\n')[1], project = project))
+        response_claude = claude.call(message.format(git_message=last_commit.commit.message.split('\n\n')[1], project = project)).replace('"', '\\"')
         
 
         response = requests.post(
