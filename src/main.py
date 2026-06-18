@@ -4,6 +4,7 @@ from claude_call import claude_call
 import threading
 import requests
 import json
+import sys
 
 last_commit = None
 
@@ -20,8 +21,9 @@ def threding_git(git, stop_event):
         if not new_commit: stop_event.set()
 
 if __name__ == '__main__':
+    n_project = sys.argv[1]
     keys = get_keys()
-    project = 'monci07/Linkdin-auto'
+    project = f'monci07/{n_project}'
     git = github_fetch(keys['Github'],project)
     claude = claude_call(keys['Claude'])
     message = "\
