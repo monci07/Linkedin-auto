@@ -6,8 +6,10 @@ import requests
 import json
 import sys
 import time
+from datetime import datetime, timezone, timedelta
 
 last_commit = None
+due_at = None
 
 def get_keys():
     with open('keys.json', 'r') as f:
@@ -16,16 +18,19 @@ def get_keys():
 
 
 def threding_git(git, stop_event):
-    global last_commit
+    global last_commit, due_at
     while not stop_event.is_set():
         time.sleep(60)
         new_commit, last_commit = git.get_last_commit()
-        if not new_commit: stop_event.set()
+        if not new_commit: 
+            due_at = (datetime.now(timezone.utc) + timedelta(minutes=3)).isoformat()
+            stop_event.set()
 
 if __name__ == '__main__':
     n_project = sys.argv[1]
     keys = get_keys()
     project = f'monci07/{n_project}'
+    
     git = github_fetch(keys['Github'],project)
     claude = claude_call(keys['Claude'])
     message = "\
@@ -48,7 +53,8 @@ mutation {
     text: "{Response}"
     channelId: "{ID}"
     schedulingType: automatic
-    mode: now
+    mode: customScheduled
+    dueAt: "{time}"
   }) {
     ... on PostActionSuccess {
       post {
@@ -83,7 +89,9 @@ mutation {
                 "Authorization": f"Bearer {keys['Buffer']}",
             },
             json={
-                "query": query.replace('{Response}',response_claude).replace('{ID}', keys['ChannelID(linkedin)'])
+                "query": query.replace('{Response}',response_claude)\
+                    .replace('{ID}', keys['ChannelID(linkedin)'])\
+                    .replace('{time}', due_at)
             },
         )
 

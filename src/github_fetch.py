@@ -21,6 +21,7 @@ class github_fetch:
             print('There is a new commit')
             self.last_sha = last_commit.sha[:7]
             return False, last_commit
+        print('There is no new commit')
         return True, None
 
         # for commit in commits[:10]:
